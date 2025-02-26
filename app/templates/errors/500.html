@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="display-1 fw-bold">500</h1>
+            <p class="fs-3">Internal Server Error</p>
+            <p class="lead">Something went wrong on our end. Please try again later or contact support if the problem persists.</p>
+            <a href="{{ url_for('blog.index') }}" class="btn btn-primary">
+                <i class="fas fa-home me-2"></i>Go Home
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

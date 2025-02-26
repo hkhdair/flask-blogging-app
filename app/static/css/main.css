@@ -1,0 +1,75 @@
+/* Main styling for FlaskBlog */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1;
+}
+
+/* Post styling */
+.post-card {
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.post-featured-image {
+    height: 200px;
+    object-fit: cover;
+}
+
+.post-metadata {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Comment styling */
+.comment-section {
+    margin-top: 2rem;
+}
+
+.comment {
+    margin-bottom: 1.5rem;
+}
+
+.comment-content {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.comment-metadata {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Profile page */
+.profile-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+}

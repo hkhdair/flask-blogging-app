@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ legend }}</h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {% if form.title.errors %}
+                                {{ form.title(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.slug.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">Leave empty to generate automatically from the title</small>
+                            {% if form.slug.errors %}
+                                {{ form.slug(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.slug.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.slug(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.category.label(class="form-label") }}
+                            {% if form.category.errors %}
+                                {{ form.category(class="form-select is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.category.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.category(class="form-select") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.tags.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">Separate tags with commas (e.g., flask, python, web)</small>
+                            {% if form.tags.errors %}
+                                {{ form.tags(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tags.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.tags(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.summary.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">A brief summary of your post (shown on the home page)</small>
+                            {% if form.summary.errors %}
+                                {{ form.summary(class="form-control is-invalid", rows=3) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.summary.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.summary(class="form-control", rows=3) }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.content.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">Supports Markdown formatting</small>
+                            {% if form.content.errors %}
+                                {{ form.content(class="form-control is-invalid", rows=10) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.content(class="form-control", rows=10) }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.featured_image.label(class="form-label") }}
+                            {% if form.featured_image.errors %}
+                                {{ form.featured_image(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.featured_image.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.featured_image(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            {{ form.published(class="form-check-input") }}
+                            {{ form.published.label(class="form-check-label") }}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                {% if 'edit' in request.path %}
+                                    Update Post
+                                {% else %}
+                                    Create Post
+                                {% endif %}
+                            </button>
+                            <a href="{{ url_for('blog.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-generate slug from title as the user types
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+        
+        if (titleInput && slugInput) {
+            titleInput.addEventListener('keyup', function() {
+                // Only autogenerate if the slug field is empty
+                if (!slugInput.value) {
+                    // Convert to lowercase, replace spaces with hyphens, remove special chars
+                    const slugValue = this.value.toLowerCase()
+                        .replace(/[^\w\s-]/g, '')
+                        .replace(/\s+/g, '-')
+                        .replace(/-+/g, '-');
+                    
+                    slugInput.value = slugValue;
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

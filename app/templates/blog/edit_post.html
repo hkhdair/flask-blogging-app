@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mb-5">
+                <div class="card-header bg-primary text-white">
+                    <h1 class="h3 mb-0">{{ legend }}</h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {% if form.title.errors %}
+                                {{ form.title(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.slug.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">URL friendly name (automatically generated from title)</small>
+                            {% if form.slug.errors %}
+                                {{ form.slug(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.slug.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.slug(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.category.label(class="form-label") }}
+                            {% if form.category.errors %}
+                                {{ form.category(class="form-select is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.category.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.category(class="form-select") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.tags.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">Separate tags with commas (e.g., flask, python, web)</small>
+                            {% if form.tags.errors %}
+                                {{ form.tags(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.tags.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.tags(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.summary.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">A brief summary of your post (shown on the home page)</small>
+                            {% if form.summary.errors %}
+                                {{ form.summary(class="form-control is-invalid", rows=3) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.summary.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.summary(class="form-control", rows=3) }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.content.label(class="form-label") }}
+                            <small class="text-muted d-block mb-2">Supports Markdown formatting</small>
+                            {% if form.content.errors %}
+                                {{ form.content(class="form-control is-invalid", rows=10) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.content.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.content(class="form-control", rows=10) }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            {{ form.featured_image.label(class="form-label") }}
+                            {% if post.featured_image %}
+                                <div class="mb-2">
+                                    <img src="{{ url_for('static', filename='uploads/' + post.featured_image) }}" 
+                                        class="img-thumbnail" style="max-height: 200px;" alt="Current featured image">
+                                    <div class="text-muted small">Current featured image</div>
+                                </div>
+                            {% endif %}
+                            {% if form.featured_image.errors %}
+                                {{ form.featured_image(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.featured_image.errors %}
+                                        <span>{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.featured_image(class="form-control") }}
+                            {% endif %}
+                            <small class="text-muted">Upload a new image to replace the current one (optional)</small>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            {{ form.published(class="form-check-input") }}
+                            {{ form.published.label(class="form-check-label") }}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Update Post</button>
+                            <div>
+                                <a href="{{ url_for('blog.post', slug=post.slug) }}" class="btn btn-outline-secondary">Cancel</a>
+                                <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Post Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this post? This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('blog.delete_post', slug=post.slug) }}" method="POST">
+                    <input class="btn btn-danger" type="submit" value="Delete">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-generate slug from title as the user types
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+        
+        if (titleInput && slugInput) {
+            // Only set up the listener if the slug is empty or matches a slugified version of the title
+            // This prevents overwriting custom slugs on edit
+            const currentTitle = titleInput.value;
+            const currentSlug = slugInput.value;
+            const slugifiedTitle = slugify(currentTitle);
+            
+            if (!currentSlug || currentSlug === slugifiedTitle) {
+                titleInput.addEventListener('keyup', function() {
+                    slugInput.value = slugify(this.value);
+                });
+            }
+        }
+        
+        function slugify(text) {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start of text
+                .replace(/-+$/, '');            // Trim - from end of text
+        }
+    });
+</script>
+{% endblock %}
